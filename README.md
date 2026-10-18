@@ -7,6 +7,7 @@ Adboard puts product and service offers from many companies into one app. Users 
 ## What the demo shows
 
 - **Home feed:** story-style offer cards and video ads, with music and a Bangla voiceover.
+- **20 categories:** food, travel, phones, ISP, skills, automobiles, entertainment, agriculture, sports, finance, beautification, grocery and more, each with subcategories.
 - **Search:** filter by location (current location, or division → district → upazila) and by category and subcategory.
 - **Compare:** open an offer's details and compare it with other offers in the same category.
 - **▶ tab (entertainment):**
