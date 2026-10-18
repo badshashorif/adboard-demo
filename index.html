@@ -511,6 +511,10 @@ a.fol{text-decoration:none;display:inline-block}
 .sh.tt .lvtap{right:64px}
 .sh.tt .shm{right:70px}
 .lvopen{justify-self:start;display:inline-flex;align-items:center;gap:5px;font-size:11.5px;font-weight:700;color:#fff;text-decoration:none;padding:5px 10px;border-radius:999px;background:rgba(255,255,255,.16);backdrop-filter:blur(6px);text-shadow:none}
+.lvman-h,.lvsnd{display:none}
+.sh.lvman .lvbox{opacity:1}.sh.lvman .lvtap{pointer-events:none}.sh.lvman .lvspin{opacity:0}
+.sh.lvman .lvman-h{display:inline-flex;position:absolute;top:36%;left:50%;transform:translateX(-50%);z-index:3;align-items:center;gap:6px;padding:7px 13px;border-radius:999px;background:rgba(0,0,0,.6);color:#fff;font-size:12px;font-weight:700;pointer-events:none;white-space:nowrap}
+.stv.lvauto .sh.live.lvon .lvsnd{display:inline-flex;position:absolute;top:58px;left:12px;z-index:4;align-items:center;gap:6px;border:0;padding:8px 13px;border-radius:999px;background:#fff;color:#111!important;font-weight:800;font-size:12.5px;box-shadow:0 6px 18px rgba(0,0,0,.35);animation:nudgeR 1.3s ease-in-out infinite}
 .ctas{display:flex;flex-wrap:wrap;align-items:center;gap:12px 16px;margin-top:22px}
 .cta{display:inline-flex;align-items:center;padding:12px 20px;border-radius:999px;background:var(--accent);color:var(--accent-ink);font-weight:700;text-decoration:none;font-family:var(--display)}
 .cta:hover{filter:brightness(1.06)}
@@ -1463,14 +1467,14 @@ SHORTS.tt=[
  {id:'7696861687953018134',a:'Red Bull',h:'redbull',t:'how it feels hanging out with that one friend 🪂',c:'#DB0A40'},
  {id:'7696878640675523862',a:'Red Bull',h:'redbull',t:"the best work from home setup we've ever seen 🤩",c:'#DB0A40'}];
 SCH.yt.src='YouTube থেকে live';SCH.tt.src='TikTok থেকে live';
-var LV={}, ytQ=[], ytOK=false, lvCheck=null;
+var LV={}, ytQ=[], ytOK=false, lvCheck=null, lvCoarse=!!(window.matchMedia&&matchMedia('(pointer:coarse)').matches), lvAsked=false;
 var TTQ='autoplay=0&loop=1&controls=0&progress_bar=0&play_button=0&volume_control=0&fullscreen_button=0&timestamp=0&music_info=0&description=0&rel=0&native_context_menu=0&closed_caption=0';
 function lvUrl(src,s){return src==='yt'?'https://www.youtube.com/shorts/'+s.id:'https://www.tiktok.com/@'+s.h+'/video/'+s.id}
 function lvItem(s,src,i){
   var yt=src==='yt',ini=esc(s.a.charAt(0)),fg=s.fg?';color:'+s.fg:'';
   return '<div class="sh live '+src+'" data-i="'+i+'"'+(yt?' style="background-image:url(https://i.ytimg.com/vi/'+s.id+'/hqdefault.jpg)"':'')+'>'+
     (yt?'':'<div class="lvph"><span class="tav" style="background:'+s.c+fg+'">'+ini+'</span><b>@'+esc(s.h)+'</b><small>TikTok video load হচ্ছে…</small></div>')+
-    '<div class="lvbox"></div><div class="lvtap"></div><div class="g"></div><span class="lvspin"></span><span class="shpi">'+ic('play2',30)+'</span>'+
+    '<div class="lvbox"></div><div class="lvtap"></div><span class="lvman-h">'+ic('play2',13)+'Video টা একবার tap করুন</span><button class="lvsnd" data-lv="snd">'+ic('vol',15)+'Sound চালু করুন</button><div class="g"></div><span class="lvspin"></span><span class="shpi">'+ic('play2',30)+'</span>'+
     '<div class="shm"><span class="shsrc lvsrc"><i></i>'+SCH[src].src+'</span>'+
     '<div class="shu"><span class="av" style="background:'+s.c+fg+'">'+ini+'</span><b>'+esc(s.a)+'</b><a class="fol '+src+'" href="'+(yt?'https://www.youtube.com/@'+s.h:'https://www.tiktok.com/@'+s.h)+'" target="_blank" rel="noopener" data-lv="link">'+(yt?'Subscribe':'Follow')+'</a></div>'+
     '<p>'+esc(s.t)+'</p>'+(yt?'':'<a class="lvopen" data-lv="link" href="'+lvUrl(src,s)+'" target="_blank" rel="noopener">'+ic('ext',13)+'TikTok এ খুলুন</a>')+'</div>'+
@@ -1499,13 +1503,14 @@ function lvMount(src,i){
     ytReady(function(){if(LV[k]!==o)return;
       o.player=new YT.Player(d,{videoId:s.id,width:'100%',height:'100%',playerVars:{autoplay:0,mute:1,controls:0,playsinline:1,loop:1,playlist:s.id,rel:0,modestbranding:1,iv_load_policy:3,fs:0,disablekb:1,origin:location.origin},
         events:{onReady:function(){o.ready=true;if(o.want)lvStart(o)},
-                onStateChange:function(e){o.state=e.data;if(e.data===1){it.classList.add('lvon');if(o.want)it.classList.remove('paused')}},
+                onStateChange:function(e){o.state=e.data;if(e.data===1){it.classList.add('lvon');it.classList.remove('lvman');if(o.want)it.classList.remove('paused')}},
                 onError:function(){it.classList.add('lverr')}}})})}
   else{var fr=document.createElement('iframe');fr.src='https://www.tiktok.com/player/v1/'+s.id+'?'+TTQ;fr.allow='autoplay; encrypted-media; fullscreen; picture-in-picture';fr.title='TikTok: '+s.a;box.appendChild(fr);o.win=fr}
   return o;
 }
 function lvDrop(o){try{if(o.player&&o.player.destroy)o.player.destroy()}catch(e){}o.it.querySelector('.lvbox').innerHTML='';o.it.classList.remove('lvon','lverr','paused');delete LV[o.src+':'+o.i]}
 function lvStart(o,keep){if(!o)return;o.want=true;
+  clearTimeout(o.wd);o.wd=setTimeout(function(){if(o.want&&!o.it.classList.contains('lvon'))o.it.classList.add('lvman')},6000);
   if(o.win&&!o.started){if(o.win.src.indexOf('autoplay=1')<0){o.ready=false;o.win.src=o.win.src.replace('autoplay=0','autoplay=1')}}
   else if(!o.ready)return;
   else if(o.player){try{if(stMuted)o.player.mute();else o.player.unMute();if(!keep)o.player.seekTo(0,true);o.player.playVideo()}catch(e){}}
@@ -1520,7 +1525,7 @@ window.addEventListener('message',function(e){
   if(e.origin!=='https://www.tiktok.com')return;var d=e.data;if(typeof d==='string'){try{d=JSON.parse(d)}catch(_){return}}
   if(!d||!d['x-tiktok-player'])return;var o=null;Object.keys(LV).forEach(function(k){if(LV[k].win&&LV[k].win.contentWindow===e.source)o=LV[k]});if(!o)return;
   if(d.type==='onPlayerReady'){o.ready=true;if(o.want)lvStart(o);else ttSend(o,'pause')}
-  else if(d.type==='onStateChange'){o.state=d.value;if(d.value===1){if(!o.started){o.started=true;if(stMuted)ttSend(o,'mute')}if(!o.want){ttSend(o,'pause');return}o.it.classList.add('lvon');o.it.classList.remove('paused')}}
+  else if(d.type==='onStateChange'){o.state=d.value;if(d.value===1){if(!o.started){o.started=true;if(stMuted)ttSend(o,'mute')}if(!o.want){ttSend(o,'pause');return}o.it.classList.add('lvon');o.it.classList.remove('paused','lvman')}}
   else if(d.type==='onCurrentTime'){var v=d.value||{};o.t=v.currentTime||0;o.dur=v.duration||0;if(o.t>0)o.it.classList.add('lvon')}
   else if(d.type==='onPlayerError'){var c=d.value&&d.value.errorCode;if(c===3002&&o.want){stMuted=true;stMuteIcons();ttSend(o,'mute');ttSend(o,'play')}else if(c===1001||c===2001)o.it.classList.add('lverr')}
 });
@@ -1537,6 +1542,7 @@ function shActivate(src,i){
     var nx=items[i+1],nv=nx&&nx.querySelector('video');if(nv&&!nv.getAttribute('src')){nv.preload='metadata';nv.src=nv.dataset.src}
     stT=setInterval(function(){var d=v.duration||0;it.querySelector('.shprog i').style.width=(d?v.currentTime/d*100:0)+'%'},150);return}
   saOff();
+  if(lvCoarse&&!lvAsked){lvAsked=true;if(!stMuted){stMuted=true;stMuteIcons();$('#ov-video').classList.add('lvauto')}}
   var o=lvMount(src,i);if(src==="yt")lvMount(src,i+1);if(!o)return;it.classList.remove('paused');lvStart(o);
   stT=setInterval(function(){var t=0,d=0;if(o.player&&o.player.getDuration){try{t=o.player.getCurrentTime();d=o.player.getDuration()}catch(e){}}else{t=o.t;d=o.dur}
     it.querySelector('.shprog i').style.width=(d?Math.min(100,t/d*100):0)+'%'},200);
@@ -1545,13 +1551,14 @@ function shToggle(src,it){if(!it)return;
   if(src==='ath'){var v=it.querySelector('video');if(!v)return;if(v.paused){play(v);it.classList.remove('paused');if(!stMuted)SA.play().catch(function(){})}else{v.pause();it.classList.add('paused');saOff()}return}
   var o=LV[src+':'+(+it.dataset.i)];if(!o)return;if(it.classList.contains('paused')){it.classList.remove('paused');lvStart(o,true)}else{it.classList.add('paused');lvStop(o)}}
 function stMediaOff(){clearInterval(stT);stT=null;saOff();$('#ov-video').querySelectorAll('video').forEach(function(v){if(!v.paused)v.pause()});lvPauseAll()}
-function stMuteIcons(){$('#ov-video').querySelectorAll('[data-st="m"]').forEach(function(b){b.innerHTML=ic(stMuted?'mute':'vol',17);b.setAttribute('aria-label',stMuted?'Sound চালু করুন':'Sound বন্ধ করুন')});
+function stMuteIcons(){if(!stMuted)$('#ov-video').classList.remove('lvauto');$('#ov-video').querySelectorAll('[data-st="m"]').forEach(function(b){b.innerHTML=ic(stMuted?'mute':'vol',17);b.setAttribute('aria-label',stMuted?'Sound চালু করুন':'Sound বন্ধ করুন')});
   var o=lvCur();if(o&&o.ready){if(o.player){try{stMuted?o.player.mute():o.player.unMute()}catch(e){}}else ttSend(o,stMuted?'mute':'unMute')}}
 /* live-card buttons run before the feed's own tap handler */
 document.getElementById('ov-video').addEventListener('click',function(e){var b=e.target.closest('[data-lv]');if(!b)return;e.stopPropagation();
   var it=b.closest('.sh'),src=it&&it.classList.contains('yt')?'yt':'tt',s=it&&SHORTS[src][+it.dataset.i];if(!s)return;
   if(b.dataset.lv==='link')return;
   e.preventDefault();
+  if(b.dataset.lv==='snd'){stMuted=false;stMuteIcons();toast('🔊 Sound চালু');return}
   if(b.dataset.lv==='like'){var on=b.classList.toggle('on');if(on)shBurst(it,e)}
   else if(b.dataset.lv==='share'){var u=lvUrl(src,s);try{navigator.clipboard.writeText(u).then(function(){toast('Link copy হলো')},function(){toast(u)})}catch(_){toast(u)}}
 },true);
